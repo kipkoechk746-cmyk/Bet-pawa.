@@ -1,0 +1,652 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BetPawa · Casino & Aviator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: #0b0e14; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 12px; }
+
+.phone { max-width: 400px; width: 100%; background: #0f1219; border-radius: 40px; padding: 16px 12px 20px; box-shadow: 0 25px 50px -8px rgba(0,0,0,0.8), 0 0 0 2px #1e2630 inset; position: relative; overflow: hidden; }
+
+.notch { width: 120px; height: 24px; background: #0b0e14; margin: 0 auto 8px; border-radius: 20px; display: flex; justify-content: center; align-items: center; gap: 6px; color: #7a8598; font-size: 10px; }
+
+.app-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px 14px; }
+.logo { display: flex; align-items: center; gap: 6px; }
+.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #f5b342, #f0932b); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: #0b0e14; }
+.logo-text { font-size: 18px; font-weight: 700; color: #fff; }
+.logo-text span { color: #f5b342; }
+.header-actions { display: flex; gap: 12px; color: #9aa4b8; font-size: 18px; }
+.header-actions i { cursor: pointer; }
+
+.balance-card { background: linear-gradient(145deg, #1a212c, #131a23); border-radius: 20px; padding: 16px 18px; margin-bottom: 18px; border: 1px solid #2a3442; display: flex; justify-content: space-between; align-items: center; }
+.balance-info .label { font-size: 12px; color: #7a8598; margin-bottom: 4px; }
+.balance-info .amount { font-size: 28px; font-weight: 700; color: #fff; }
+.balance-info .amount small { font-size: 16px; color: #f5b342; margin-left: 4px; }
+.deposit-btn { background: #f5b342; border: none; color: #0b0e14; font-weight: 700; font-size: 13px; padding: 10px 16px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: transform 0.15s; }
+.deposit-btn:active { transform: scale(0.96); }
+
+.quick-pay-section { margin-bottom: 20px; }
+.section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 4px; }
+.section-title h3 { font-size: 14px; color: #eef2f6; }
+.section-title a { font-size: 12px; color: #f5b342; text-decoration: none; }
+.pay-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+.pay-chips::-webkit-scrollbar { display: none; }
+.chip { background: #1a212c; border: 1px solid #2a3442; padding: 10px 16px; border-radius: 30px; color: #d0d8e5; font-weight: 600; font-size: 14px; white-space: nowrap; cursor: pointer; display: flex; align-items: center; gap: 6px; flex-shrink: 0; transition: all 0.2s; }
+.chip i { font-size: 12px; color: #f5b342; }
+.chip:hover, .chip.active { background: #f5b342; color: #0b0e14; border-color: #f5b342; }
+.chip:hover i, .chip.active i { color: #0b0e14; }
+
+.games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.game-card { background: #1a212c; border-radius: 18px; padding: 14px; border: 1px solid #2a3442; position: relative; cursor: pointer; min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s; }
+.game-card:hover { transform: translateY(-3px); border-color: #f5b342; }
+.game-card .badge { position: absolute; top: 10px; right: 10px; background: #f5b342; color: #0b0e14; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 20px; }
+.game-card .icon { font-size: 28px; color: #f5b342; margin-bottom: 8px; }
+.game-card h4 { color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+.game-card p { color: #7a8598; font-size: 11px; }
+.game-card .play-indicator { display: flex; align-items: center; gap: 4px; color: #f5b342; font-size: 11px; font-weight: 600; margin-top: 8px; }
+.game-card.aviator { background: linear-gradient(145deg, #1f2a1a, #162117); border-color: #2a4a2a; }
+.game-card.aviator .icon { color: #6fcf97; }
+.game-card.aviator .badge { background: #6fcf97; }
+.game-card.aviator .play-indicator { color: #6fcf97; }
+
+.live-wins { background: #131a23; border-radius: 18px; padding: 14px 16px; border: 1px solid #2a3442; margin-bottom: 16px; max-height: 140px; overflow-y: auto; }
+.win-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #1e2630; font-size: 12px; }
+.win-item:last-child { border-bottom: none; }
+.win-user { display: flex; align-items: center; gap: 8px; color: #b0bccf; }
+.win-user i { color: #6fcf97; font-size: 8px; }
+.win-amount { color: #6fcf97; font-weight: 700; }
+.win-game { color: #7a8598; font-size: 10px; margin-left: 24px; }
+
+.bottom-nav { display: flex; justify-content: space-around; align-items: center; padding: 8px 0 4px; border-top: 1px solid #1e2630; }
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: #5f6b7e; font-size: 10px; cursor: pointer; padding: 4px 12px; }
+.nav-item i { font-size: 20px; }
+.nav-item.active { color: #f5b342; }
+
+/* MODALS */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 999; padding: 16px; backdrop-filter: blur(4px); }
+.modal-overlay.show { display: flex; }
+.modal { background: #131a23; border: 1px solid #2a3442; border-radius: 24px; padding: 22px; width: 100%; max-width: 360px; animation: pop 0.25s ease; }
+@keyframes pop { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal h2 { color: #fff; font-size: 18px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.modal h2 .mpesa-logo { background: #4caf50; color: #fff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; }
+.modal p.sub { color: #7a8598; font-size: 12px; margin-bottom: 16px; }
+.modal label { display: block; color: #9aa4b8; font-size: 12px; margin-bottom: 6px; font-weight: 500; }
+.modal input { width: 100%; background: #0f1219; border: 1px solid #2a3442; border-radius: 12px; padding: 12px 14px; color: #fff; font-size: 15px; margin-bottom: 14px; outline: none; }
+.modal input:focus { border-color: #f5b342; }
+.modal-btn { width: 100%; background: #f5b342; color: #0b0e14; border: none; padding: 14px; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; margin-bottom: 8px; transition: transform 0.1s; }
+.modal-btn:active { transform: scale(0.98); }
+.modal-btn.secondary { background: #1e2630; color: #9aa4b8; }
+.amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.amount-grid .amt-opt { background: #1a212c; border: 1px solid #2a3442; color: #d0d8e5; padding: 12px; border-radius: 12px; text-align: center; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+.amount-grid .amt-opt:hover, .amount-grid .amt-opt.active { background: #f5b342; color: #0b0e14; border-color: #f5b342; }
+
+.mpesa-stk { text-align: center; padding: 20px 0; }
+.mpesa-stk i.spinner { font-size: 40px; color: #f5b342; animation: spin 1s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.mpesa-stk h3 { color: #fff; margin: 12px 0 6px; font-size: 16px; }
+.mpesa-stk p { color: #7a8598; font-size: 12px; line-height: 1.5; }
+.mpesa-stk .ref { color: #6fcf97; font-weight: 600; margin-top: 10px; font-size: 13px; font-family: monospace; }
+.mpesa-success { text-align: center; padding: 20px 0; }
+.mpesa-success i.check { font-size: 50px; color: #6fcf97; }
+.mpesa-success h3 { color: #fff; margin: 12px 0 6px; font-size: 18px; }
+.mpesa-success p { color: #9aa4b8; font-size: 13px; }
+.mpesa-success .amt { color: #6fcf97; font-weight: 800; font-size: 24px; margin: 10px 0; }
+
+/* AVIATOR GAME */
+.aviator-screen, .casino-screen { position: fixed; inset: 0; background: #0b0e14; z-index: 1000; display: none; flex-direction: column; padding: 16px; overflow: hidden; }
+.aviator-screen.show, .casino-screen.show { display: flex; }
+.aviator-header, .casino-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.aviator-header button, .casino-header button { background: #1e2630; border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+.aviator-header h2, .casino-header h2 { color: #fff; font-size: 20px; }
+.aviator-header .bal, .casino-header .bal { color: #f5b342; font-weight: 700; font-size: 14px; }
+
+.history-strip { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; scrollbar-width: none; }
+.history-strip::-webkit-scrollbar { display: none; }
+.hist-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.hist-pill.low { background: rgba(231,76,60,0.2); color: #e74c3c; }
+.hist-pill.mid { background: rgba(245,179,66,0.2); color: #f5b342; }
+.hist-pill.high { background: rgba(111,207,151,0.2); color: #6fcf97; }
+
+.aviator-stage { flex: 1; position: relative; background: linear-gradient(180deg, #0f1a12, #0b0e14); border-radius: 20px; border: 1px solid #2a3442; overflow: hidden; margin-bottom: 16px; min-height: 260px; }
+.grid-lines { position: absolute; inset: 0; background-image: linear-gradient(rgba(111,207,151,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(111,207,151,0.06) 1px, transparent 1px); background-size: 40px 40px; }
+#plane { position: absolute; left: 20px; bottom: 20px; font-size: 30px; color: #6fcf97; z-index: 2; filter: drop-shadow(0 0 10px rgba(111,207,151,0.6)); transition: left 0.1s linear, bottom 0.1s linear; }
+#trail { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.multiplier-display { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; z-index: 3; width: 100%; }
+.multiplier-display .m { font-size: 56px; font-weight: 900; color: #6fcf97; text-shadow: 0 0 30px rgba(111,207,151,0.6); transition: color 0.2s; }
+.multiplier-display .status { color: #7a8598; font-size: 13px; margin-top: 4px; font-weight: 500; }
+.aviator-stage.crashed .m { color: #e74c3c !important; text-shadow: 0 0 30px rgba(231,76,60,0.6) !important; }
+.aviator-stage.crashed .status { color: #e74c3c; font-weight: 700; }
+
+.aviator-controls { background: #131a23; border-radius: 20px; padding: 16px; border: 1px solid #2a3442; }
+.bet-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.bet-input-row input { flex: 1; background: #0f1219; border: 1px solid #2a3442; border-radius: 12px; padding: 12px; color: #fff; font-size: 15px; outline: none; }
+.bet-input-row input:focus { border-color: #6fcf97; }
+.bet-input-row .val-btn { background: #1e2630; border: none; color: #9aa4b8; padding: 0 12px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 12px; }
+.bet-input-row .val-btn:hover { color: #fff; background: #2a3442; }
+.quick-bets { display: flex; gap: 6px; margin-bottom: 12px; }
+.quick-bets button { flex: 1; background: #1e2630; border: 1px solid #2a3442; color: #9aa4b8; padding: 8px 4px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.quick-bets button:hover { background: #2a3442; color: #fff; }
+.action-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; font-weight: 800; font-size: 16px; cursor: pointer; letter-spacing: 0.5px; transition: transform 0.1s, background 0.2s; }
+.action-btn.place { background: #6fcf97; color: #0b0e14; }
+.action-btn.cashout { background: #f5b342; color: #0b0e14; animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(245,179,66,0.6); } 50% { box-shadow: 0 0 0 12px rgba(245,179,66,0); } }
+.action-btn:active:not(.waiting) { transform: scale(0.98); }
+
+/* CASINO SLOT */
+.slots { background: #131a23; border-radius: 20px; border: 1px solid #2a3442; padding: 24px 16px; margin-bottom: 16px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.reels { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
+.reel { width: 80px; height: 100px; background: #0f1219; border: 2px solid #2a3442; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 44px; transition: border-color 0.2s; }
+.reel.win { border-color: #f5b342; box-shadow: 0 0 20px rgba(245,179,66,0.4); }
+.reel.spinning { animation: slot-spin 0.08s linear infinite; }
+@keyframes slot-spin { 0% { transform: translateY(-4px); } 50% { transform: translateY(4px); } 100% { transform: translateY(-4px); } }
+.slot-info { text-align: center; color: #7a8598; font-size: 12px; margin-bottom: 16px; line-height: 1.5; }
+.slot-result { text-align: center; color: #6fcf97; font-weight: 700; font-size: 16px; margin-bottom: 16px; min-height: 22px; }
+
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #1a212c; border: 1px solid #2a3442; color: #fff; padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: 600; z-index: 2000; transition: transform 0.3s; pointer-events: none; max-width: 90%; text-align: center; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: #6fcf97; color: #6fcf97; }
+.toast.error { border-color: #e74c3c; color: #e74c3c; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div>
+
+  <div class="app-header">
+    <div class="logo">
+      <div class="logo-icon">B</div>
+      <div class="logo-text">Bet<span>Pawa</span></div>
+    </div>
+    <div class="header-actions">
+      <i class="fas fa-search"></i>
+      <i class="fas fa-bell"></i>
+      <i class="fas fa-user-circle"></i>
+    </div>
+  </div>
+
+  <div class="balance-card">
+    <div class="balance-info">
+      <div class="label">Available Balance</div>
+      <div class="amount">KES <span id="balance">0</span><small>.00</small></div>
+    </div>
+    <button class="deposit-btn" onclick="openDeposit()"><i class="fas fa-plus-circle"></i> Deposit</button>
+  </div>
+
+  <div class="quick-pay-section">
+    <div class="section-title">
+      <h3>Quick Deposit</h3>
+      <a href="#" onclick="openDeposit(); return false;">View all</a>
+    </div>
+    <div class="pay-chips">
+      <div class="chip" onclick="quickDeposit(5, event)"><i class="fas fa-coins"></i> KES 5</div>
+      <div class="chip" onclick="quickDeposit(10, event)"><i class="fas fa-coins"></i> KES 10</div>
+      <div class="chip" onclick="quickDeposit(50, event)"><i class="fas fa-coins"></i> KES 50</div>
+      <div class="chip" onclick="quickDeposit(100, event)"><i class="fas fa-coins"></i> KES 100</div>
+      <div class="chip" onclick="quickDeposit(500, event)"><i class="fas fa-coins"></i> KES 500</div>
+      <div class="chip" onclick="quickDeposit(1000, event)"><i class="fas fa-coins"></i> KES 1,000</div>
+    </div>
+  </div>
+
+  <div class="games-grid">
+    <div class="game-card" onclick="openCasino()">
+      <div class="badge">HOT</div>
+      <div>
+        <div class="icon"><i class="fas fa-dice"></i></div>
+        <h4>Casino</h4>
+        <p>Slots · Roulette · Blackjack</p>
+      </div>
+      <div class="play-indicator"><i class="fas fa-play"></i> Play now</div>
+    </div>
+    <div class="game-card aviator" onclick="openAviator()">
+      <div class="badge">LIVE</div>
+      <div>
+        <div class="icon"><i class="fas fa-plane"></i></div>
+        <h4>Aviator</h4>
+        <p>Cash out before it flies</p>
+      </div>
+      <div class="play-indicator"><i class="fas fa-play"></i> Play now</div>
+    </div>
+  </div>
+
+  <div class="live-wins" id="winFeed">
+    <div class="win-item"><div class="win-user"><i class="fas fa-circle"></i> @mike_254</div><div class="win-amount">+ KES 2,400</div></div>
+    <div class="win-game">Aviator · 2.0x</div>
+    <div class="win-item"><div class="win-user"><i class="fas fa-circle"></i> @wanjiku</div><div class="win-amount">+ KES 850</div></div>
+    <div class="win-game">Casino · Lucky Spin</div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active"><i class="fas fa-home"></i> Home</div>
+    <div class="nav-item" onclick="openCasino()"><i class="fas fa-dice"></i> Casino</div>
+    <div class="nav-item" onclick="openAviator()"><i class="fas fa-plane"></i> Aviator</div>
+    <div class="nav-item" onclick="openDeposit()"><i class="fas fa-wallet"></i> Wallet</div>
+    <div class="nav-item"><i class="fas fa-user"></i> Account</div>
+  </div>
+</div>
+
+<!-- DEPOSIT MODAL -->
+<div class="modal-overlay" id="depositModal">
+  <div class="modal" id="depositContent">
+    <h2>Deposit <span class="mpesa-logo">M-PESA</span></h2>
+    <p class="sub">Minimum KES 5 · Instant to your BetPawa wallet</p>
+    <label>Choose Amount (KES)</label>
+    <div class="amount-grid" id="amountGrid">
+      <div class="amt-opt" data-amt="5">5</div>
+      <div class="amt-opt" data-amt="10">10</div>
+      <div class="amt-opt" data-amt="50">50</div>
+      <div class="amt-opt" data-amt="100">100</div>
+      <div class="amt-opt" data-amt="500">500</div>
+      <div class="amt-opt" data-amt="1000">1,000</div>
+    </div>
+    <label>Or enter amount</label>
+    <input type="number" id="depositAmount" value="100" min="5">
+    <label>M-Pesa Phone Number</label>
+    <input type="tel" id="depositPhone" value="0712345678" placeholder="07XX XXX XXX">
+    <button class="modal-btn" onclick="processDeposit()">Send STK Push</button>
+    <button class="modal-btn secondary" onclick="closeDeposit()">Cancel</button>
+  </div>
+  <div class="modal" id="stkContent" style="display:none;">
+    <div class="mpesa-stk">
+      <i class="fas fa-spinner spinner"></i>
+      <h3>Check your phone</h3>
+      <p>An M-Pesa STK push has been sent to</p>
+      <p id="stkPhone" style="color:#fff; font-weight:600; margin-top:6px;">0712345678</p>
+      <p class="ref" id="stkRef">Ref: QK7X2M9A</p>
+      <p style="color:#7a8598; font-size:11px; margin-top:16px;">Enter your M-Pesa PIN to confirm</p>
+    </div>
+  </div>
+  <div class="modal" id="successContent" style="display:none;">
+    <div class="mpesa-success">
+      <i class="fas fa-check-circle check"></i>
+      <h3>Deposit Successful</h3>
+      <div class="amt" id="successAmount">KES 100</div>
+      <p>Your BetPawa wallet has been credited</p>
+      <p style="color:#7a8598; font-size:11px; margin-top:8px;" id="successRef">Ref: QK7X2M9A</p>
+      <button class="modal-btn" style="margin-top:20px;" onclick="closeDeposit()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- AVIATOR SCREEN -->
+<div class="aviator-screen" id="aviatorScreen">
+  <div class="aviator-header">
+    <button onclick="closeAviator()"><i class="fas fa-arrow-left"></i></button>
+    <h2>Aviator</h2>
+    <div class="bal">KES <span id="aviatorBal">0</span></div>
+  </div>
+
+  <div class="history-strip" id="histStrip"></div>
+
+  <div class="aviator-stage" id="stage">
+    <div class="grid-lines"></div>
+    <svg id="trail"></svg>
+    <div id="plane"><i class="fas fa-plane"></i></div>
+    <div class="multiplier-display">
+      <div class="m" id="multiplier">1.00x</div>
+      <div class="status" id="status">Place your bet to start</div>
+    </div>
+  </div>
+
+  <div class="aviator-controls">
+    <div class="bet-input-row">
+      <input type="number" id="betAmount" value="20" min="5">
+      <button class="val-btn" onclick="setBet(20)">20</button>
+      <button class="val-btn" onclick="setBet(50)">50</button>
+      <button class="val-btn" onclick="setBet(100)">100</button>
+    </div>
+    <div class="quick-bets">
+      <button onclick="setBet(5)">KES 5</button>
+      <button onclick="setBet(10)">KES 10</button>
+      <button onclick="setBet(50)">KES 50</button>
+      <button onclick="setBet(100)">KES 100</button>
+    </div>
+    <button class="action-btn place" id="actionBtn" onclick="placeOrCashout()">PLACE BET</button>
+  </div>
+</div>
+
+<!-- CASINO SCREEN -->
+<div class="casino-screen" id="casinoScreen">
+  <div class="casino-header">
+    <button onclick="closeCasino()"><i class="fas fa-arrow-left"></i></button>
+    <h2>Lucky Slots</h2>
+    <div class="bal">KES <span id="casinoBal">0</span></div>
+  </div>
+
+  <div class="slots">
+    <div class="reels">
+      <div class="reel" id="reel1">🍒</div>
+      <div class="reel" id="reel2">🍒</div>
+      <div class="reel" id="reel3">🍒</div>
+    </div>
+    <div class="slot-info">
+      Match 3 to win!<br>
+      🍒🍒🍒 pays 2x · 🔔🔔🔔 pays 5x · 7️⃣7️⃣7️⃣ pays 10x · 💎💎💎 pays 20x
+    </div>
+    <div class="slot-result" id="slotResult"></div>
+    <div class="bet-input-row" style="margin-bottom:12px;">
+      <input type="number" id="slotBet" value="20" min="5">
+    </div>
+    <div class="quick-bets" style="margin-bottom:12px;">
+      <button onclick="setSlotBet(5)">KES 5</button>
+      <button onclick="setSlotBet(10)">KES 10</button>
+      <button onclick="setSlotBet(50)">KES 50</button>
+      <button onclick="setSlotBet(100)">KES 100</button>
+    </div>
+    <button class="action-btn place" id="spinBtn" onclick="spinSlots()">SPIN</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==================== STATE ==================== */
+let balance = parseFloat(localStorage.getItem('betpawa_balance')) || 1250;
+const setBalance = (v) => {
+  balance = Math.max(0, Math.round(v * 100) / 100);
+  localStorage.setItem('betpawa_balance', balance);
+  const fmt = balance.toLocaleString('en-KE', {maximumFractionDigits: 0});
+  document.getElementById('balance').textContent = fmt;
+  document.getElementById('aviatorBal').textContent = fmt;
+  document.getElementById('casinoBal').textContent = fmt;
+};
+setBalance(balance);
+
+/* ==================== TOAST ==================== */
+function toast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.className = 'toast ' + type, 2400);
+}
+
+/* ==================== DEPOSIT (FAKE M-PESA) ==================== */
+document.querySelectorAll('.amt-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.amt-opt').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    document.getElementById('depositAmount').value = opt.dataset.amt;
+  });
+});
+
+function openDeposit() {
+  document.getElementById('depositModal').classList.add('show');
+  document.getElementById('depositContent').style.display = 'block';
+  document.getElementById('stkContent').style.display = 'none';
+  document.getElementById('successContent').style.display = 'none';
+}
+function closeDeposit() {
+  document.getElementById('depositModal').classList.remove('show');
+}
+function processDeposit() {
+  const amt = parseFloat(document.getElementById('depositAmount').value);
+  const phone = document.getElementById('depositPhone').value.trim();
+  if (!amt || amt < 5) { toast('Minimum deposit is KES 5', 'error'); return; }
+  if (!phone || phone.replace(/\D/g,'').length < 9) { toast('Enter a valid M-Pesa number', 'error'); return; }
+
+  const ref = 'QK' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+  document.getElementById('depositContent').style.display = 'none';
+  document.getElementById('stkContent').style.display = 'block';
+  document.getElementById('stkPhone').textContent = phone;
+  document.getElementById('stkRef').textContent = 'Ref: ' + ref;
+
+  // Simulate user entering PIN, M-Pesa confirms after 3.5 sec
+  setTimeout(() => {
+    setBalance(balance + amt);
+    document.getElementById('stkContent').style.display = 'none';
+    document.getElementById('successContent').style.display = 'block';
+    document.getElementById('successAmount').textContent = 'KES ' + amt.toLocaleString();
+    document.getElementById('successRef').textContent = 'Ref: ' + ref;
+  }, 3500);
+}
+function quickDeposit(amt, e) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  if (e) e.currentTarget.classList.add('active');
+  document.getElementById('depositAmount').value = amt;
+  openDeposit();
+}
+
+/* ==================== AVIATOR GAME ==================== */
+const aviator = { running: false, placed: false, bet: 0, multiplier: 1.00, crashAt: 2.00, interval: null, history: [] };
+const PLANE_START = { x: 20, y: 20 };
+const trailPoints = [];
+
+function openAviator() {
+  document.getElementById('aviatorScreen').classList.add('show');
+  renderHistory();
+  resetRound();
+}
+function closeAviator() {
+  document.getElementById('aviatorScreen').classList.remove('show');
+  clearInterval(aviator.interval);
+  aviator.running = false;
+}
+function setBet(n) { document.getElementById('betAmount').value = n; }
+
+function resetRound() {
+  clearInterval(aviator.interval);
+  aviator.running = false;
+  aviator.placed = false;
+  aviator.multiplier = 1.00;
+  trailPoints.length = 0;
+  document.getElementById('multiplier').textContent = '1.00x';
+  document.getElementById('status').textContent = 'Place your bet to start';
+  document.getElementById('stage').classList.remove('crashed');
+  const plane = document.getElementById('plane');
+  plane.style.left = PLANE_START.x + 'px';
+  plane.style.bottom = PLANE_START.y + 'px';
+  plane.style.transform = 'rotate(-15deg)';
+  document.getElementById('trail').innerHTML = '';
+  const btn = document.getElementById('actionBtn');
+  btn.textContent = 'PLACE BET';
+  btn.className = 'action-btn place';
+}
+
+function placeOrCashout() {
+  if (!aviator.placed) {
+    const bet = parseFloat(document.getElementById('betAmount').value);
+    if (!bet || bet < 5) { toast('Minimum bet is KES 5', 'error'); return; }
+    if (bet > balance) { toast('Insufficient balance', 'error'); return; }
+    setBalance(balance - bet);
+    aviator.bet = bet;
+    aviator.placed = true;
+    startFlight();
+  } else if (aviator.running) {
+    const win = Math.round(aviator.bet * aviator.multiplier);
+    setBalance(balance + win);
+    toast(`Cashed out @ ${aviator.multiplier.toFixed(2)}x → +KES ${win}`, 'success');
+    addHistory(aviator.multiplier);
+    clearInterval(aviator.interval);
+    aviator.running = false;
+    document.getElementById('status').textContent = 'Cashed out ✓';
+    const btn = document.getElementById('actionBtn');
+    btn.textContent = 'PLACE BET';
+    btn.className = 'action-btn place';
+    aviator.placed = false;
+    setTimeout(resetRound, 2000);
+  }
+}
+
+function startFlight() {
+  aviator.running = true;
+  aviator.multiplier = 1.00;
+  aviator.crashAt = 1.2 + Math.random() * 8;
+  const btn = document.getElementById('actionBtn');
+  btn.textContent = 'CASH OUT';
+  btn.className = 'action-btn cashout';
+  document.getElementById('status').textContent = 'Flying...';
+
+  const plane = document.getElementById('plane');
+  const stage = document.getElementById('stage');
+  const svg = document.getElementById('trail');
+  const maxW = stage.clientWidth - 60;
+  const maxH = stage.clientHeight - 60;
+
+  aviator.interval = setInterval(() => {
+    aviator.multiplier += 0.015 + aviator.multiplier * 0.01;
+    const m = aviator.multiplier;
+    document.getElementById('multiplier').textContent = m.toFixed(2) + 'x';
+
+    const progress = Math.min(1, (m - 1) / (aviator.crashAt - 1));
+    const x = PLANE_START.x + (maxW - PLANE_START.x) * progress;
+    const y = PLANE_START.y + (maxH - PLANE_START.y) * Math.pow(progress, 0.8);
+    plane.style.left = x + 'px';
+    plane.style.bottom = y + 'px';
+    plane.style.transform = `rotate(${-15 - progress * 20}deg)`;
+
+    trailPoints.push({ x: x + 15, y: stage.clientHeight - y - 15 });
+    const path = trailPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+    svg.innerHTML = `<path d="${path}" stroke="#6fcf97" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round"/>`;
+
+    if (m >= aviator.crashAt) {
+      clearInterval(aviator.interval);
+      aviator.running = false;
+      document.getElementById('stage').classList.add('crashed');
+      document.getElementById('status').textContent = 'FLEW AWAY!';
+      document.getElementById('multiplier').textContent = m.toFixed(2) + 'x';
+      addHistory(m);
+      toast('Crashed! Better luck next time', 'error');
+      const b = document.getElementById('actionBtn');
+      b.textContent = 'PLACE BET';
+      b.className = 'action-btn place';
+      aviator.placed = false;
+      setTimeout(resetRound, 2200);
+    }
+  }, 80);
+}
+
+function addHistory(m) {
+  aviator.history.unshift(m);
+  if (aviator.history.length > 12) aviator.history.pop();
+  renderHistory();
+}
+function renderHistory() {
+  const strip = document.getElementById('histStrip');
+  strip.innerHTML = aviator.history.map(m => {
+    const cls = m < 2 ? 'low' : m < 5 ? 'mid' : 'high';
+    return `<div class="hist-pill ${cls}">${m.toFixed(2)}x</div>`;
+  }).join('');
+}
+
+/* ==================== CASINO SLOTS ==================== */
+const SYMBOLS = ['🍒', '🔔', '7️⃣', '💎', '⭐', '🍋'];
+let spinning = false;
+
+function openCasino() { document.getElementById('casinoScreen').classList.add('show'); }
+function closeCasino() { document.getElementById('casinoScreen').classList.remove('show'); }
+function setSlotBet(n) { document.getElementById('slotBet').value = n; }
+
+function spinSlots() {
+  if (spinning) return;
+  const bet = parseFloat(document.getElementById('slotBet').value);
+  if (!bet || bet < 5) { toast('Minimum bet is KES 5', 'error'); return; }
+  if (bet > balance) { toast('Insufficient balance', 'error'); return; }
+
+  setBalance(balance - bet);
+  spinning = true;
+  document.getElementById('slotResult').textContent = '';
+  document.getElementById('spinBtn').textContent = 'SPINNING...';
+
+  const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+  reels.forEach(r => { r.classList.add('spinning'); r.classList.remove('win'); });
+
+  // Build final result - weighted so wins are rare but possible
+  const finalResult = reels.map((r, i) => {
+    // 25% chance each reel matches the first one
+    if (i === 0 || Math.random() < 0.25) return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+  });
+
+  // Force some 3-matches for demo fun
+  if (Math.random() < 0.2) {
+    const s = SYMBOLS[Math.floor(Math.random() * 4)];
+    finalResult[0] = finalResult[1] = finalResult[2] = s;
+  } else if (Math.random() < 0.3) {
+    const s = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    finalResult[0] = finalResult[1] = s;
+  }
+
+  const spinDurations = [900, 1200, 1500];
+  reels.forEach((reel, i) => {
+    // Scroll through random symbols
+    const scroll = setInterval(() => {
+      reel.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    }, 80);
+
+    setTimeout(() => {
+      clearInterval(scroll);
+      reel.classList.remove('spinning');
+      reel.textContent = finalResult[i];
+
+      if (i === 2) {
+        spinning = false;
+        document.getElementById('spinBtn').textContent = 'SPIN';
+        checkSlotWin(finalResult, bet);
+      }
+    }, spinDurations[i]);
+  });
+}
+
+function checkSlotWin(result, bet) {
+  const [a, b, c] = result;
+  let multiplier = 0;
+  if (a === b && b === c) {
+    if (a === '💎') multiplier = 20;
+    else if (a === '7️⃣') multiplier = 10;
+    else if (a === '🔔') multiplier = 5;
+    else if (a === '🍒') multiplier = 2;
+    else multiplier = 2;
+  } else if (a === b || b === c || a === c) {
+    multiplier = 0.5; // partial match - small consolation
+  }
+
+  const resEl = document.getElementById('slotResult');
+  if (multiplier >= 2) {
+    const win = Math.round(bet * multiplier);
+    setBalance(balance + win);
+    resEl.style.color = '#6fcf97';
+    resEl.textContent = `🎉 YOU WON KES ${win.toLocaleString()}! (${multiplier}x)`;
+    document.querySelectorAll('.reel').forEach(r => r.classList.add('win'));
+    toast(`You won KES ${win}!`, 'success');
+  } else if (multiplier > 0) {
+    const win = Math.round(bet * multiplier);
+    setBalance(balance + win);
+    resEl.style.color = '#f5b342';
+    resEl.textContent = `Partial match → KES ${win} back`;
+  } else {
+    resEl.style.color = '#e74c3c';
+    resEl.textContent = 'No match. Try again!';
+  }
+}
+
+/* ==================== LIVE WIN FEED (fake) ==================== */
+const fakeUsers = ['@brian_254', '@shiro', '@kamau', '@nyambura', '@otieno', '@chebet', '@wanjiru', '@mutua'];
+const fakeGames = ['Aviator · 1.5x', 'Casino · Slots', 'Aviator · 5.0x', 'Casino · Roulette', 'Aviator · 12.0x', 'Aviator · 2.4x']; victor . 1.12x
+function addRandomWin() {
+  const feed = document.getElementById('winFeed');
+  const user = fakeUsers[Math.floor(Math.random() * fakeUsers.length)];
+  const game = fakeGames[Math.floor(Math.random() * fakeGames.length)];
+  const amt = Math.floor(Math.random() * 5000) + 50;
+  const item = document.createElement('div');
+  item.className = 'win-item';
+  item.innerHTML = `<div class="win-user"><i class="fas fa-circle"></i> ${user}</div><div class="win-amount">+ KES ${amt.toLocaleString()}</div>`;
+  const gameEl = document.createElement('div');
+  gameEl.className = 'win-game';
+  gameEl.textContent = game;
+  if (feed.firstChild) {
+    feed.insertBefore(gameEl, feed.firstChild);
+    feed.insertBefore(item, gameEl);
+  } else {
+    feed.appendChild(item); feed.appendChild(gameEl);
+  }
+  while (feed.children.length > 12) feed.removeChild(feed.lastChild);
+}
+setInterval(addRandomWin, 7000);
+</script>
+</body>
+</html>
